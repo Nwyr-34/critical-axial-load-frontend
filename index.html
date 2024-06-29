@@ -1,24 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cálculo de Carga Axial Crítica</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Carga Axial Crítica</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <h1>Cálculo de Carga Axial Crítica</h1>
-    <form id="calcForm">
-        <label for="E">Módulo de Elasticidad (E):</label>
-        <input type="number" id="E" name="E" step="any" required>
-        <label for="I">Segundo Momento de Área (I):</label>
-        <input type="number" id="I" name="I" step="any" required>
-        <label for="L">Longitud Efectiva (L):</label>
-        <input type="number" id="L" name="L" step="any" required>
-        <button type="submit">Calcular</button>
+  <div class="container">
+    <h1>Calculadora de Carga Axial Crítica</h1>
+    <form id="calculation-form">
+      <label for="E">Módulo de Elasticidad (E):</label>
+      <input type="number" id="E" step="any" required>
+
+      <label for="I">Segundo Momento de Área (I):</label>
+      <input type="number" id="I" step="any" required>
+
+      <label for="L">Longitud Efectiva (L):</label>
+      <input type="number" id="L" step="any" required>
+
+      <button type="button" id="calculate-btn">Calcular</button>
     </form>
-    <div id="result"></div>
-    <canvas id="resultChart"></canvas>
-    <script src="script.js"></script>
+
+    <div id="result">
+      <h2>Resultado de Carga Axial Crítica: <span id="pcr-value">--</span></h2>
+    </div>
+
+    <div id="graph-container">
+      <canvas id="graph"></canvas>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>

@@ -1,54 +1,45 @@
-document.getElementById('calcForm').addEventListener('submit', async function(event) {
-  event.preventDefault();
+// script.js
+document.getElementById('calculate-btn').addEventListener('click', () => {
+    const E = parseFloat(document.getElementById('E').value);
+    const I = parseFloat(document.getElementById('I').value);
+    const L = parseFloat(document.getElementById('L').value);
 
-  const E = parseFloat(document.getElementById('E').value);
-  const I = parseFloat(document.getElementById('I').value);
-  const L = parseFloat(document.getElementById('L').value);
-
-  const response = await fetch('http://localhost:8000/calculate_critical_load/', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ E, I, L })
-  });
-
-  const result = await response.json();
-  document.getElementById('result').textContent = `Carga Axial Crítica (P_cr): ${result.P_cr.toFixed(2)}`;
-
-  drawChart(E, I, L, result.P_cr);
+    fetch('https://critical-axial-load-backend.onrender.com/calculate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ E, I, L })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            document.getElementById('pcr-value').innerText = data.Resultado;
+            updateGraph(E, I, L, data.Resultado);
+        })
+        .catch(error => console.error('Error:', error));
 });
 
-function drawChart(E, I, L, P_cr) {
-  const ctx = document.getElementById('resultChart').getContext('2d');
-  const chart = new Chart(ctx, {
-      type: 'line',
-      data: {
-          labels: Array.from({ length: 10 }, (_, i) => i + 1),
-          datasets: [{
-              label: 'Carga Axial Crítica',
-              data: Array.from({ length: 10 }, (_, i) => (Math.PI ** 2 * E * I) / ((i + 1) ** 2)),
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 2,
-              fill: false
-          }]
-      },
-      options: {
-          responsive: true,
-          scales: {
-              x: {
-                  title: {
-                      display: true,
-                      text: 'Factor de Longitud'
-                  }
-              },
-              y: {
-                  title: {
-                      display: true,
-                      text: 'Carga Axial Crítica'
-                  }
-              }
-          }
-      }
-  });
+function updateGraph(E, I, L, pcr) {
+    const ctx = document.getElementById('graph').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Carga Axial Crítica'],
+            datasets: [{
+                label: 'Resultado',
+                data: [pcr],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
